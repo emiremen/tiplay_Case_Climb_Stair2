@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI speedLevelTxt;
 
     [SerializeField] private ParticleSystem moneyParticle;
+    [SerializeField] private ParticleSystem partyParticle;
 
     private void OnEnable()
     {
@@ -127,13 +128,13 @@ public class UIManager : MonoBehaviour
     {
         bestScoreBoard.transform.position += new Vector3(0, gameData.bestScoreYPos, 0);
         bestScoreBoard.GetComponentInChildren<TextMeshPro>().text = gameData.bestScore.ToString("0.0") + "m";
-
+        Debug.Log(gameData.bestScore);
     }
 
     private void ShowGameOverPanel()
     {
-        SaveMoneyData();
         SaveBestScore();
+        SaveMoneyData();
         gameOverPanel.SetActive(true);
         touchPanel.SetActive(false);
         EventManager.setGameState?.Invoke(GameState.end);
@@ -143,14 +144,17 @@ public class UIManager : MonoBehaviour
 
     private void ShowWinPanel()
     {
-        SaveMoneyData();
         SaveBestScore();
+        SaveMoneyData();
         winPanel.SetActive(true);
         touchPanel.SetActive(false);
         gameData.level++;
         gameData.bacgroundColor = Random.ColorHSV(0, 1, 0, 1, .7f, 1);
-        gameData.bestScore = 0;
+        gameData.bestScore = levelLength;
+        gameData.bestScoreYPos = 0;
+        partyParticle.Play();
         EventManager.setGameState?.Invoke(GameState.end);
+        EventManager.setPlayerVisibility?.Invoke(false);
         EventManager.getPlayerAnimator?.Invoke().SetBool("isIdle", true);
         EventManager.getPlayerAnimator?.Invoke().SetBool("isRunning", false);
     }

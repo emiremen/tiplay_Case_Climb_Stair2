@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc9e15fc465bb542ba344852a7adef4, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
-  bestScore: 0
+  bestScore: 50
   bestScoreYPos: 0
-  money: 499.5
-  level: 58
-  bacgroundColor: {r: 0.46843725, g: 0.870216, b: 0.67764556, a: 1}
+  money: 444
+  level: 1
+  bacgroundColor: {r: 0.5932758, g: 0.38092682, b: 0.97306085, a: 1}
   maxLevel: 20
-  staminaLevel: 4
-  incomeLevel: 4
-  speedLevel: 8
-  staminaCost: 100
-  incomeCost: 100
-  speedCost: 180
+  staminaLevel: 1
+  incomeLevel: 1
+  speedLevel: 1
+  staminaCost: 40
+  incomeCost: 40
+  speedCost: 40

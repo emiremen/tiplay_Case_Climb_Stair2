@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     private SkinnedMeshRenderer playerMeshRenderer;
 
     private Tween makeRedTween;
-    [SerializeField]private bool isTouchedScreen;
+    [SerializeField] private bool isTouchedScreen;
 
     [SerializeField] private float waitForStep = 1f;
 
@@ -54,25 +54,33 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        waitForStep -= Time.deltaTime;
         if (EventManager.getGameState.Invoke() == GameState.start)
         {
             CharacterSweatingAndBreathing();
-            waitForStep -= Time.deltaTime;
-            if (isTouchedScreen || Input.GetKey(KeyCode.Space))
+            if (isTouchedScreen && waitForStep <= 0)
             {
-                if (waitForStep <= 0)
-                {
-                    waitForStep = .5f;
-                    if (!animator.GetBool("isRunning")) animator.SetBool("isRunning", true);
-                    animator.SetBool("isIdle", false);
-                    CharacterJump();
-                }
+                waitForStep = 1f;
+                animator.SetBool("isRunning", true);
+                animator.SetBool("isIdle", false);
+                CharacterJump();
             }
             else
             {
-                animator.SetBool("isIdle", true);
+                if (waitForStep > 0 && !animator.GetBool("isRunning"))
+                {
+                    animator.SetBool("isRunning", false);
+                    animator.SetBool("isIdle", true);
+                }
             }
         }
+    }
+
+    public void StopRunningAnimationEvent()
+    {
+        if (waitForStep > 0) return;
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isIdle", true);
     }
 
     private void checkIsTouchedScreen(bool value)
@@ -112,16 +120,15 @@ public class Player : MonoBehaviour
     private void CharacterJump()
     {
         GameObject spawnedStair = EventManager.spawnStair?.Invoke();
-        
+
         transform.DOComplete();
-        transform.DOJump(spawnedStair.transform.GetChild(0).position + new Vector3(0, 0.035f, 0), .05f, 1, .5f).OnUpdate(()=> transform.LookAt(new Vector3(spawnedStair.transform.GetChild(0).position.x, transform.position.y, spawnedStair.transform.GetChild(0).position.z))).OnComplete(() =>
+        transform.DOJump(spawnedStair.transform.GetChild(0).position + new Vector3(0, 0.035f, 0), .05f, 1, .5f).OnUpdate(() => transform.LookAt(new Vector3(spawnedStair.transform.GetChild(0).position.x, transform.position.y, spawnedStair.transform.GetChild(0).position.z))).OnComplete(() =>
         {
             if (EventManager.getGameState.Invoke() == GameState.start)
             {
                 spawnedStair = EventManager.spawnStair?.Invoke();
                 EventManager.decreaseScore?.Invoke();
                 EventManager.gainMoney?.Invoke();
-                waitForStep = .5f;
                 if (sweatingAmount <= 15 + (gameData.staminaLevel * 2))
                 {
                     sweatingAmount += 2;
@@ -135,15 +142,14 @@ public class Player : MonoBehaviour
                     sweatingAmount = 0;
                     ChangeCharacterMaterialTiling(1f);
                 }
-            transform.DOJump(spawnedStair.transform.GetChild(0).position + new Vector3(0, 0.035f, 0), .05f, 1, .5f).OnUpdate(() => transform.LookAt(new Vector3(spawnedStair.transform.GetChild(0).position.x, transform.position.y, spawnedStair.transform.GetChild(0).position.z))).OnComplete(() =>
-            {
-                if (EventManager.getGameState.Invoke() == GameState.start)
+                transform.DOJump(spawnedStair.transform.GetChild(0).position + new Vector3(0, 0.035f, 0), .05f, 1, .5f).OnUpdate(() => transform.LookAt(new Vector3(spawnedStair.transform.GetChild(0).position.x, transform.position.y, spawnedStair.transform.GetChild(0).position.z))).OnComplete(() =>
                 {
-                EventManager.decreaseScore?.Invoke();
-                EventManager.gainMoney?.Invoke();
-                }
-                if (!isTouchedScreen) animator.SetBool("isRunning", false);
-            });
+                    if (EventManager.getGameState.Invoke() == GameState.start)
+                    {
+                        EventManager.decreaseScore?.Invoke();
+                        EventManager.gainMoney?.Invoke();
+                    }
+                });
             }
         }
         );
