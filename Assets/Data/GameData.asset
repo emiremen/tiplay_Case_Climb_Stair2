@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bc9e15fc465bb542ba344852a7adef4, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  bestScore: 0
+  bestScoreYPos: 0
+  money: 499.5
+  level: 58
+  bacgroundColor: {r: 0.46843725, g: 0.870216, b: 0.67764556, a: 1}
+  maxLevel: 20
+  staminaLevel: 4
+  incomeLevel: 4
+  speedLevel: 8
+  staminaCost: 100
+  incomeCost: 100
+  speedCost: 180
